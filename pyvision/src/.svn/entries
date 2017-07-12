@@ -1,0 +1,37 @@
+10
+
+dir
+413
+http://pyvision.svn.sourceforge.net/svnroot/pyvision/trunk/src
+http://pyvision.svn.sourceforge.net/svnroot/pyvision
+
+
+
+2012-01-06T21:33:38.423862Z
+413
+svohara
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+2a83181e-c148-0410-bf7c-9f1693d9d8f0
+
+pyvision
+dir
+
+samples
+dir
+
+test
+dir
+
