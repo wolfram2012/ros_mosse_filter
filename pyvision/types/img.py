@@ -45,7 +45,7 @@ from PIL.Image import BICUBIC, ANTIALIAS
 
 import numpy
 import numpy as np
-import cv
+import cv2
 
 
 import unittest
@@ -117,21 +117,21 @@ class Image:
         self.annotated = None
         self.bw_annotate = bw_annotate
         
-        # Convert floating point ipl images to numpy arrays
-        if isinstance(data,cv.iplimage) and data.nChannels == 3 and data.depth == 32:
-            w,h = cv.GetSize(data)
-            data = np.frombuffer(data.tostring(),dtype=np.float32)
-            data.shape = (h,w,3)
-            data = data.transpose((2,1,0))
-            data = data[::-1,:,:]
+        # # Convert floating point ipl images to numpy arrays
+        # if isinstance(data,cv.iplimage) and data.nChannels == 3 and data.depth == 32:
+        #     w,h = cv.GetSize(data)
+        #     data = np.frombuffer(data.tostring(),dtype=np.float32)
+        #     data.shape = (h,w,3)
+        #     data = data.transpose((2,1,0))
+        #     data = data[::-1,:,:]
             
-        # Convert floating point ipl images to numpy arrays
-        if isinstance(data,cv.iplimage) and data.nChannels == 1 and data.depth == 32:
-            w,h = cv.GetSize(data)
-            data = np.frombuffer(data.tostring(),dtype=np.float32)
-            data.shape = (h,w)
-            data = data.transpose((2,1,0))
-            data = data[::-1,:,:]
+        # # Convert floating point ipl images to numpy arrays
+        # if isinstance(data,cv.iplimage) and data.nChannels == 1 and data.depth == 32:
+        #     w,h = cv.GetSize(data)
+        #     data = np.frombuffer(data.tostring(),dtype=np.float32)
+        #     data.shape = (h,w)
+        #     data = data.transpose((2,1,0))
+        #     data = data[::-1,:,:]
             
         
         if isinstance(data,numpy.ndarray) and len(data.shape) == 2:
@@ -145,6 +145,7 @@ class Image:
                 self.depth=32
             elif self.matrix2d.dtype == numpy.float64:
                 self.depth=64
+            #TODO: add uint8 type into asMatrix
             else:
                 raise TypeError("Unsuppoted format for ndarray images: %s"%self.matrix2d.dtype)
             
@@ -185,18 +186,18 @@ class Image:
             
             self.depth = 8
                         
-        elif isinstance(data,cv.iplimage):
-            self.type=TYPE_OPENCV
-            self.opencv=data 
+        # elif isinstance(data,cv.iplimage):
+        #     self.type=TYPE_OPENCV
+        #     self.opencv=data 
             
-            self.width = data.width
-            self.height = data.height
+        #     self.width = data.width
+        #     self.height = data.height
                         
-            assert data.nChannels in (1,3)
-            self.channels = data.nChannels 
+        #     assert data.nChannels in (1,3)
+        #     self.channels = data.nChannels 
             
-            assert data.depth == 8
-            self.depth = data.depth   
+        #     assert data.depth == 8
+        #     self.depth = data.depth   
 
         else:
             raise TypeError("Could not create from type: %s %s"%(data,type(data)))
@@ -244,22 +245,22 @@ class Image:
             self._generateOpenCV()
         return self.opencv
         
-    def asOpenCVBW(self):
-        '''
-        @return: the image data in an OpenCV one channel format
-        '''
-        cvim = self.asOpenCV()
+    # def asOpenCVBW(self):
+    #     '''
+    #     @return: the image data in an OpenCV one channel format
+    #     '''
+    #     cvim = self.asOpenCV()
         
-        if cvim.nChannels == 1:
-            return cvim
+    #     if cvim.nChannels == 1:
+    #         return cvim
         
-        elif cvim.nChannels == 3:
-            cvimbw = cv.CreateImage(cv.GetSize(cvim), cv.IPL_DEPTH_8U, 1);
-            cv.CvtColor(cvim, cvimbw, cv.CV_BGR2GRAY);
-            return cvimbw
+    #     elif cvim.nChannels == 3:
+    #         cvimbw = cv.CreateImage(cv.GetSize(cvim), cv.IPL_DEPTH_8U, 1);
+    #         cv.CvtColor(cvim, cvimbw, cv.CV_BGR2GRAY);
+    #         return cvimbw
         
-        else:
-            raise ValueError("Unsupported opencv image format: nChannels=%d"%cvim.nChannels)
+    #     else:
+    #         raise ValueError("Unsupported opencv image format: nChannels=%d"%cvim.nChannels)
         
     def asThermal(self,clip_negative=False):
         '''
@@ -312,26 +313,26 @@ class Image:
                 self.annotated = self.asPIL().copy().convert("RGB")
         return self.annotated
             
-    def asHSV(self):
-        '''
-        @return: an OpenCV HSV encoded image
-        '''
-        cvim = self.asOpenCV()
-        dst = cv.CreateImage(cv.GetSize(cvim), cv.IPL_DEPTH_8U, 3)
-        cv.CvtColor(cvim, dst, cv.CV_BGR2HSV)
+    # def asHSV(self):
+    #     '''
+    #     @return: an OpenCV HSV encoded image
+    #     '''
+    #     cvim = self.asOpenCV()
+    #     dst = cv.CreateImage(cv.GetSize(cvim), cv.IPL_DEPTH_8U, 3)
+    #     cv.CvtColor(cvim, dst, cv.CV_BGR2HSV)
         
-        return dst
+    #     return dst
         
         
-    def asLAB(self):
-        '''
-        @return: an OpenCV LAB encoded image
-        '''
-        cvim = self.asOpenCV()
-        dst = cv.CreateImage(cv.GetSize(cvim), cv.IPL_DEPTH_8U, 3)
-        cv.CvtColor(cvim, dst, cv.CV_BGR2Lab)
+    # def asLAB(self):
+    #     '''
+    #     @return: an OpenCV LAB encoded image
+    #     '''
+    #     cvim = self.asOpenCV()
+    #     dst = cv.CreateImage(cv.GetSize(cvim), cv.IPL_DEPTH_8U, 3)
+    #     cv.CvtColor(cvim, dst, cv.CV_BGR2Lab)
         
-        return dst
+    #     return dst
         
         
     def annotateRect(self,rect,color='red', fill_color=None):
@@ -584,26 +585,26 @@ class Image:
         else:
             raise NotImplementedError("Cannot convert image from type: %s"%self.type)
         
-    def _generateOpenCV(self):
-        '''
-        Create a color opencv representation of the image.
-        TODO: The OpenCV databuffer seems to be automatically swapped from RGB to BGR.  This is counter intuitive.
-        '''
+    # def _generateOpenCV(self):
+    #     '''
+    #     Create a color opencv representation of the image.
+    #     TODO: The OpenCV databuffer seems to be automatically swapped from RGB to BGR.  This is counter intuitive.
+    #     '''
         
-        w,h = self.size
-        if self.channels == 1:
-            gray = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,1)
-            cv.SetData(gray,self.toBufferGray(8))
-            self.opencv = gray
-        elif self.channels == 3:
-            rgb = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,3)
-            bgr = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,3)
-            cv.SetData(rgb, self.toBufferRGB(8))
-            # convert from RGB to BGR
-            cv.CvtColor(rgb,bgr,cv.CV_RGB2BGR)
-            self.opencv=bgr
-        else:
-            raise NotImplementedError("Cannot convert image from type: %s"%self.type)
+    #     w,h = self.size
+    #     if self.channels == 1:
+    #         gray = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,1)
+    #         cv.SetData(gray,self.toBufferGray(8))
+    #         self.opencv = gray
+    #     elif self.channels == 3:
+    #         rgb = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,3)
+    #         bgr = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,3)
+    #         cv.SetData(rgb, self.toBufferRGB(8))
+    #         # convert from RGB to BGR
+    #         cv.CvtColor(rgb,bgr,cv.CV_RGB2BGR)
+    #         self.opencv=bgr
+    #     else:
+    #         raise NotImplementedError("Cannot convert image from type: %s"%self.type)
                 
         
     def toBufferGray(self,depth):
@@ -627,8 +628,7 @@ class Image:
                 buffer = self.opencv.tostring()
             elif self.channels == 3:
                 w,h = self.width,self.height
-                gray = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,1)
-                cv.CvtColor( self.opencv, gray, cv.CV_BGR2GRAY );
+                gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
                 buffer = gray.tostring()
             else:
                 raise TypeError("Operation not supported for image type.")
@@ -665,71 +665,6 @@ class Image:
             return data.tostring()
         
 
-    def toBufferRGB(self,depth):
-        '''
-            returns the image data as a binary python string.
-        '''
-        buffer = None
-        if self.type == TYPE_PIL:
-            pil = self.pil
-            if pil.mode != 'RGB':
-                pil = pil.convert('RGB')
-            buffer = pil.tostring()
-        elif self.type == TYPE_MATRIX_2D:
-            mat = self.matrix2d.transpose()
-            tmp = np.zeros((3,self.height,self.width),numpy.float32)
-            tmp[0,:] = mat
-            tmp[1,:] = mat
-            tmp[2,:] = mat
-            buffer = mat.tostring()            
-        elif self.type == TYPE_MATRIX_RGB:
-            mat = self.matrix3d.transpose()
-            buffer = mat.tostring()
-        elif self.type == TYPE_OPENCV:
-            w,h = self.width,self.height
-            if self.channels == 3:
-                rgb = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,3)
-                cv.CvtColor( self.opencv, rgb, cv.CV_BGR2RGB );
-                buffer = rgb.tostring()
-            elif self.channels == 1:
-                rgb = cv.CreateImage((w,h),cv.IPL_DEPTH_8U,3)
-                cv.CvtColor( self.opencv, rgb, cv.CV_GRAY2RGB );
-                buffer = rgb.tostring()
-            else:
-                raise TypeError("Operation not supported for image type.")
-        else:
-            raise TypeError("Operation not supported for image type.")
-        
-        assert buffer
-            
-        if depth == self.depth:
-            return buffer
-        
-        else:
-            types = {8:numpy.uint8,32:numpy.float32,64:numpy.float64}
-            
-            # convert the buffer to data
-            data = numpy.frombuffer(buffer,types[self.depth])
-            
-            if depth==8:
-                # Make sure the data is in a valid range
-                max_value = data.max()
-                min_value = data.min()
-                data_range = max_value - min_value
-                if max_value <= 255 and min_value >= 0 and data_range >= 50:
-                    # assume the values are already in a good range for the
-                    # 8 bit image
-                    pass
-                else:
-                    # Rescale the values from 0 to 255 
-                    if max_value == min_value:
-                        max_value = min_value+1
-                    data = (255.0/(max_value-min_value))*(data-min_value)
-            
-            data = data.astype(types[depth])
-            return data.tostring()
-        
-
     def toBufferRGBA(self,depth):
         '''
             returns the image data as a binary python string.
@@ -752,26 +687,26 @@ class Image:
 
         return pyvision.Image(tmp)
     
-    def scale(self, scale):
-        ''' Returns a scaled version of the image. This is a convenience function.
-        For more control, look at the Affine class for arbitrary transformations.
-        @param scale: a float indicating the scale factor
-        @returns: a new pyvision image that is the scaled version of this image.
-        ''' 
-        w,h = self.size
-        new_size = (int(round(scale*w)),int(round(scale*h)))
-        return self.resize(new_size)
+    # def scale(self, scale):
+    #     ''' Returns a scaled version of the image. This is a convenience function.
+    #     For more control, look at the Affine class for arbitrary transformations.
+    #     @param scale: a float indicating the scale factor
+    #     @returns: a new pyvision image that is the scaled version of this image.
+    #     ''' 
+    #     w,h = self.size
+    #     new_size = (int(round(scale*w)),int(round(scale*h)))
+    #     return self.resize(new_size)
     
-    def copy(self):
-        '''
-        Returns a new pv.Image which is a copy of (only) the current image.
-        Other internal data stored by the current pv.Image will NOT be copied.
-        This method uses cv.CloneImage so that the underlying image data will be
-        disconnected from the original data. (Deep copy)
-        '''
-        imgdat = self.asOpenCV()
-        imgdat2 = cv.CloneImage(imgdat)
-        return pv.Image(imgdat2)
+    # # def copy(self):
+    # #     '''
+    # #     Returns a new pv.Image which is a copy of (only) the current image.
+    # #     Other internal data stored by the current pv.Image will NOT be copied.
+    # #     This method uses cv.CloneImage so that the underlying image data will be
+    # #     disconnected from the original data. (Deep copy)
+    # #     '''
+    # #     imgdat = self.asOpenCV()
+    # #     imgdat2 = cv.CloneImage(imgdat)
+    # #     return pv.Image(imgdat2)
     
     def crop(self, rect, size=None, interpolation=None, return_affine=False):
         '''
@@ -846,132 +781,132 @@ class Image:
         else:
             return pv.Image(new_image)
         
-    def save(self,filename,annotations=False):
-        '''
-        Save the image to a file.  This is performed by converting to PIL and
-        then saving to a file based on on the extension.
-        '''
-        if filename[-4:] == ".raw":
-            # TODO: save as a matrix
-            raise NotImplementedError("Cannot save as a matrix")
-        #elif filename[-4:] == ".mat":
-            # TODO: save as a matlab file
-        #    raise NotImplementedError("Cannot save in matlab format")
-        else:
-            if annotations:
-                self.asAnnotated().save(filename)
-            else:
-                self.asPIL().save(filename)
+    # def save(self,filename,annotations=False):
+    #     '''
+    #     Save the image to a file.  This is performed by converting to PIL and
+    #     then saving to a file based on on the extension.
+    #     '''
+    #     if filename[-4:] == ".raw":
+    #         # TODO: save as a matrix
+    #         raise NotImplementedError("Cannot save as a matrix")
+    #     #elif filename[-4:] == ".mat":
+    #         # TODO: save as a matlab file
+    #     #    raise NotImplementedError("Cannot save in matlab format")
+    #     else:
+    #         if annotations:
+    #             self.asAnnotated().save(filename)
+    #         else:
+    #             self.asPIL().save(filename)
             
-    def show(self, window=None, pos=None, delay=0, size=None):
-        '''
-        Displays the annotated version of the image using OpenCV highgui
-        @param window: the name of the highgui window to use, if one already exists by this name,
-        or it will create a new highgui window with this name.
-        @param pos: if a new window is being created, the (x,y) coordinate for the new window 
-        @param delay: A delay in milliseconds to wait for keyboard input (passed to cv.WaitKey). 
-            0 delays indefinitely, 30 is good for presenting a series of images like a video.
-            For performance reasons, namely when using the same window to display successive 
-            frames of video, we don't want to tear-down and re-create the window each time. 
-            Thus the window frame will persist beyond the scope of the call to img.show(). The window 
-            will disappear after the program exits, or it can be destroyed with a call to cv.DestroyWindow. 
-        @param size: Optional output size for image, None=native size.
-        @returns: the return value of the cv.WaitKey call.
-        '''
-        if window==None and pv.runningInNotebook() and 'pylab' in globals().keys():
-            # If running in notebook, then try to display the image inline.
+    # def show(self, window=None, pos=None, delay=0, size=None):
+    #     '''
+    #     Displays the annotated version of the image using OpenCV highgui
+    #     @param window: the name of the highgui window to use, if one already exists by this name,
+    #     or it will create a new highgui window with this name.
+    #     @param pos: if a new window is being created, the (x,y) coordinate for the new window 
+    #     @param delay: A delay in milliseconds to wait for keyboard input (passed to cv.WaitKey). 
+    #         0 delays indefinitely, 30 is good for presenting a series of images like a video.
+    #         For performance reasons, namely when using the same window to display successive 
+    #         frames of video, we don't want to tear-down and re-create the window each time. 
+    #         Thus the window frame will persist beyond the scope of the call to img.show(). The window 
+    #         will disappear after the program exits, or it can be destroyed with a call to cv.DestroyWindow. 
+    #     @param size: Optional output size for image, None=native size.
+    #     @returns: the return value of the cv.WaitKey call.
+    #     '''
+    #     if window==None and pv.runningInNotebook() and 'pylab' in globals().keys():
+    #         # If running in notebook, then try to display the image inline.
             
-            if size == None:
-                size = self.size
+    #         if size == None:
+    #             size = self.size
                 
-                # Constrain the size of the output
-                max_dim = max(size[0],size[1])
+    #             # Constrain the size of the output
+    #             max_dim = max(size[0],size[1])
                 
-                if max_dim > 800:
-                    scale = 800.0/max_dim
-                    size = (int(scale*size[0]),int(scale*size[1]))
+    #             if max_dim > 800:
+    #                 scale = 800.0/max_dim
+    #                 size = (int(scale*size[0]),int(scale*size[1]))
             
-            w,h = size
+    #         w,h = size
             
-            # TODO: Cant quite figure out how figsize works and how to set it to native pixels
-            #pylab.figure()
-            IPython.core.pylabtools.figsize(1.25*w/72.0,1.25*h/72.0)
-            pylab.figure()
-            pylab.imshow(self.asAnnotated(),origin='lower',aspect='auto')
+    #         # TODO: Cant quite figure out how figsize works and how to set it to native pixels
+    #         #pylab.figure()
+    #         IPython.core.pylabtools.figsize(1.25*w/72.0,1.25*h/72.0)
+    #         pylab.figure()
+    #         pylab.imshow(self.asAnnotated(),origin='lower',aspect='auto')
             
-        else:
-            # Otherwise, use an opencv window
-            if window == None:
-                window = "PyVisionImage"
+    #     else:
+    #         # Otherwise, use an opencv window
+    #         if window == None:
+    #             window = "PyVisionImage"
 
-            cv.NamedWindow(window)
+    #         cv.NamedWindow(window)
             
-            if pos != None:
-                cv.MoveWindow(window, pos[0], pos[1])
+    #         if pos != None:
+    #             cv.MoveWindow(window, pos[0], pos[1])
                 
                 
                 
-            if size != None:
-                x = pyvision.Image(self.resize(size).asAnnotated())
-            else:
-                x = pyvision.Image(self.asAnnotated())    
+    #         if size != None:
+    #             x = pyvision.Image(self.resize(size).asAnnotated())
+    #         else:
+    #             x = pyvision.Image(self.asAnnotated())    
                 
-            cv.ShowImage(window, x.asOpenCV() )
-            key = cv.WaitKey(delay=delay)
-            del x
-            return key
+    #         cv.ShowImage(window, x.asOpenCV() )
+    #         key = cv.WaitKey(delay=delay)
+    #         del x
+    #         return key
 ##
 # Convert a 32bit opencv matrix to a numpy matrix
-def OpenCVToNumpy(cvmat):
-    '''
-    Convert an OpenCV matrix to a numpy matrix.
+# def OpenCVToNumpy(cvmat):
+#     '''
+#     Convert an OpenCV matrix to a numpy matrix.
     
-    Based on code from: http://opencv.willowgarage.com/wiki/PythonInterface
-    '''
-    depth2dtype = {
-            cv.CV_8U: 'uint8',
-            cv.CV_8S: 'int8',
-            cv.CV_16U: 'uint16',
-            cv.CV_16S: 'int16',
-            cv.CV_32S: 'int32',
-            cv.CV_32F: 'float32',
-            cv.CV_64F: 'float64',
-        }
-    assert cvmat.channels == 1
-    r = cvmat.rows
-    c = cvmat.cols
+#     Based on code from: http://opencv.willowgarage.com/wiki/PythonInterface
+#     '''
+#     depth2dtype = {
+#             cv.CV_8U: 'uint8',
+#             cv.CV_8S: 'int8',
+#             cv.CV_16U: 'uint16',
+#             cv.CV_16S: 'int16',
+#             cv.CV_32S: 'int32',
+#             cv.CV_32F: 'float32',
+#             cv.CV_64F: 'float64',
+#         }
+#     assert cvmat.channels == 1
+#     r = cvmat.rows
+#     c = cvmat.cols
     
-    a = np.fromstring(
-             cvmat.tostring(),
-             dtype=depth2dtype[cvmat.type],
-             count=r*c)
-    a.shape = (r,c)
-    return a
+#     a = np.fromstring(
+#              cvmat.tostring(),
+#              dtype=depth2dtype[cvmat.type],
+#              count=r*c)
+#     a.shape = (r,c)
+#     return a
 
-##
-# Convert a numpy matrix to a 32bit opencv matrix
-def NumpyToOpenCV(a):
-    '''
-    Convert a numpy matrix to an OpenCV matrix. 
+# ##
+# # Convert a numpy matrix to a 32bit opencv matrix
+# def NumpyToOpenCV(a):
+#     '''
+#     Convert a numpy matrix to an OpenCV matrix. 
     
-    Based on code from: http://opencv.willowgarage.com/wiki/PythonInterface
-    '''
-    dtype2depth = {
-        'uint8':   cv.CV_8U,
-        'int8':    cv.CV_8S,
-        'uint16':  cv.CV_16U,
-        'int16':   cv.CV_16S,
-        'int32':   cv.CV_32S,
-        'float32': cv.CV_32F,
-        'float64': cv.CV_64F,
-    }
+#     Based on code from: http://opencv.willowgarage.com/wiki/PythonInterface
+#     '''
+#     dtype2depth = {
+#         'uint8':   cv.CV_8U,
+#         'int8':    cv.CV_8S,
+#         'uint16':  cv.CV_16U,
+#         'int16':   cv.CV_16S,
+#         'int32':   cv.CV_32S,
+#         'float32': cv.CV_32F,
+#         'float64': cv.CV_64F,
+#     }
   
-    assert len(a.shape) == 2
+#     assert len(a.shape) == 2
         
-    r,c = a.shape
-    cv_im = cv.CreateMat(r,c,dtype2depth[str(a.dtype)])
-    cv.SetData(cv_im, a.tostring())
-    return cv_im
+#     r,c = a.shape
+#     cv_im = cv.CreateMat(r,c,dtype2depth[str(a.dtype)])
+#     cv.SetData(cv_im, a.tostring())
+#     return cv_im
 
 
         

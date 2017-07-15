@@ -1,35 +1,11 @@
 K 25
 svn:wc:ra_dav:version-url
-V 36
-/svnroot/pyvision/!svn/ver/413/trunk
-END
-LICENSE
-K 25
-svn:wc:ra_dav:version-url
-V 42
-/svnroot/pyvision/!svn/ver/4/trunk/LICENSE
-END
-build_docs.sh
-K 25
-svn:wc:ra_dav:version-url
 V 49
-/svnroot/pyvision/!svn/ver/64/trunk/build_docs.sh
+/svnroot/pyvision/!svn/ver/412/trunk/src/pyvision
 END
-.project
+__init__.py
 K 25
 svn:wc:ra_dav:version-url
-V 43
-/svnroot/pyvision/!svn/ver/4/trunk/.project
-END
-.pydevproject
-K 25
-svn:wc:ra_dav:version-url
-V 50
-/svnroot/pyvision/!svn/ver/191/trunk/.pydevproject
-END
-README
-K 25
-svn:wc:ra_dav:version-url
-V 43
-/svnroot/pyvision/!svn/ver/153/trunk/README
+V 61
+/svnroot/pyvision/!svn/ver/406/trunk/src/pyvision/__init__.py
 END
