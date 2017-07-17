@@ -171,7 +171,7 @@ class CorrelationFilter:
             
         # Window the input tile to reduce fourier edge effects.
         window = self._resizeWindow(mat.shape)
-        if window != None:
+        if window is not None:
             mat = mat * window
             
         if ilog != None:

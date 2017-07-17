@@ -229,7 +229,7 @@ class Image:
         '''
         @return: a gray-scale version of this pyvision image
         '''    
-        if self.matrix2d == None:
+        if self.matrix2d is None:
             self._generateMatrix2D()
         return Image(self.matrix2d)
     

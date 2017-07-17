@@ -879,7 +879,7 @@ class _TrackingFilter(common.CorrelationFilter):
         self.n_training += 1
 
         # save the state or compute the update if rate != None
-        if self.H == None:
+        if self.H is None:
             self.H = H
             self.N = N
             self.D = D
