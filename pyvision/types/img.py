@@ -37,30 +37,17 @@
 __author__ = "$Author$"
 __version__ = "$Revision$"
 
-import PIL.ImageDraw
-import PIL.Image
-import ImageFont
-
-from PIL.Image import BICUBIC, ANTIALIAS
-
 import numpy
+
 import numpy as np
+
 import cv2
 
-
-import unittest
 import os.path
 
-
 import pyvision
+
 import pyvision as pv
-
-try:
-    import pylab
-    import IPython
-except:
-    pass # do nothing
-
 
 TYPE_MATRIX_2D  = "TYPE_MATRIX2D" 
 '''Image was created using a 2D "gray-scale" numpy array'''
@@ -74,7 +61,7 @@ TYPE_PIL        = "TYPE_PIL"
 TYPE_OPENCV     = "TYPE_OPENCV"
 '''Image was created using a OpenCV image instance'''
 
-LUMA = [0.299, 0.587, 0.114, 1.0]
+# LUMA = [0.299, 0.587, 0.114, 1.0]
 '''Values used when converting color to gray-scale.'''
 
 class Image:
@@ -237,7 +224,7 @@ class Image:
         '''
         @return: the gray-scale image data as a two dimensional numpy array
         '''
-        if self.matrix2d == None:
+        if self.matrix2d is None:
             self._generateMatrix2D()
         return self.matrix2d
 
@@ -660,7 +647,7 @@ class Image:
         
         assert buffer
             
-        print self.depth
+        # print self.depth
         if depth == self.depth:
             return buffer
         
@@ -774,7 +761,7 @@ class Image:
         
         cvim = self.asOpenCV()
 
-        print "cvim nchannels:",cvim.shape
+        # print "cvim nchannels:",cvim.shape
                 
         subim = cvim[ y:y+h, x:x+w ]
         # cv2.imshow("subim", subim)
