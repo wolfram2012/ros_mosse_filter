@@ -122,7 +122,7 @@ import numpy as np
 import pyvision as pv
 import time
 import copy
-import cv
+import cv2
 
 STATUS_INITIALIZING = "INITAILIZING"
 '''Status for initializing.'''
@@ -416,7 +416,7 @@ class MOSSETrack:
         
         self.tile_size = tile_size
         self.filter = _TrackingFilter(tile_size,type=type,sigma=sigma,reg=reg,norm_meanunit=True,**kwargs)
-        self.resampled = cv.CreateImage(self.tile_size,cv.IPL_DEPTH_8U,3)
+        # self.resampled = cv.CreateImage(self.tile_size,cv.IPL_DEPTH_8U,3)
         self.prevRect = None
         self.update_rate = update_rate
 
