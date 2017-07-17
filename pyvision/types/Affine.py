@@ -58,7 +58,7 @@ import random
 import pyvision
 import pyvision as pv
 import numpy as np
-import cv
+import cv2
 
 from pyvision.types.img import Image, TYPE_PIL, TYPE_MATRIX_2D, TYPE_OPENCV
 from pyvision.types.Point import Point
@@ -562,11 +562,17 @@ class AffineTransform:
             mat = affine_transform(mat, self.inverse[:2,:2], offset=self.inverse[:2,2])
             result = Image(mat)
         elif im.getType() == TYPE_OPENCV:
-            matrix = pv.NumpyToOpenCV(self.matrix)
+            # matrix = pv.NumpyToOpenCV(self.matrix)
+            matrix = self.matrix
             src = im.asOpenCV()
-            dst = cv.CreateImage( (self.size[0],self.size[1]), cv.IPL_DEPTH_8U, src.nChannels );
-            cv.WarpPerspective( src, dst, matrix, cv.CV_INTER_LINEAR+cv.CV_WARP_FILL_OUTLIERS,cv.ScalarAll(128))                    
+            print "gray1 shape:", src.shape
+            # dst = cv2.createImage( (self.size[0],self.size[1]), cv.IPL_DEPTH_8U, 1 );
+            # cv.WarpPerspective( src, dst, matrix, cv.CV_INTER_LINEAR+cv.CV_WARP_FILL_OUTLIERS,cv.ScalarAll(128))                    
+            dst = cv2.warpPerspective(src, matrix, (64,64))
+
             result = pv.Image(dst)
+            # cv2.imshow('window',dst) 
+            # cv2.waitKey()
 
         else:
             raise NotImplementedError("Unhandled image type for affine transform.")

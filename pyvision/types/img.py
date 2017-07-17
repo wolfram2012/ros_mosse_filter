@@ -135,20 +135,31 @@ class Image:
             
         
         if isinstance(data,numpy.ndarray) and len(data.shape) == 2:
-            self.type=TYPE_MATRIX_2D
-            self.matrix2d = data
+            # self.type=TYPE_MATRIX_2D
+            # self.matrix2d = data
             
-            self.width,self.height = self.matrix2d.shape
-            self.channels = 1
+            # self.width,self.height = self.matrix2d.shape
+            # self.channels = 1
             
-            if self.matrix2d.dtype == numpy.float32:
-                self.depth=32
-            elif self.matrix2d.dtype == numpy.float64:
-                self.depth=64
-            #TODO: add uint8 type into asMatrix
-            else:
-                raise TypeError("Unsuppoted format for ndarray images: %s"%self.matrix2d.dtype)
+            # if self.matrix2d.dtype == numpy.float32:
+            #     self.depth=32
+            # elif self.matrix2d.dtype == numpy.float64:
+            #     self.depth=64
+            # #TODO: add uint8 type into asMatrix
+            # else:
+            #     # print "im here"
+            #     raise TypeError("Unsuppoted format for ndarray images: %s"%self.matrix2d.dtype)
+            self.type=TYPE_OPENCV
+            self.opencv=data 
             
+            self.width,self.height = self.opencv.shape
+            self.channels = 1 
+
+            assert data.dtype == numpy.uint8
+            self.depth = 8 
+
+            print "shape is:", self.opencv.shape
+
         elif isinstance(data,numpy.ndarray) and len(data.shape) == 3 and data.shape[0]==3:
             self.type=TYPE_MATRIX_RGB
             self.matrix3d = data
@@ -161,6 +172,16 @@ class Image:
                 self.depth=64
             else:
                 raise TypeError("Unsuppoted format for ndarray images: %s"%self.matrix2d.dtype)
+
+        elif isinstance(data,numpy.ndarray) and len(data.shape) == 3 and data.shape[2]==3:
+            self.type=TYPE_OPENCV
+            self.opencv=data 
+            
+            self.height, self.width, self.channels = self.opencv.shape
+
+            assert data.dtype == numpy.uint8
+            self.depth = 8 
+            print "shape is:", self.opencv.shape
             
         elif isinstance(data,PIL.Image.Image) or type(data) == str:
             if type(data) == str:
@@ -197,8 +218,7 @@ class Image:
         #     self.channels = data.nChannels 
             
         #     assert data.depth == 8
-        #     self.depth = data.depth   
-
+        #     self.depth = data.depth 
         else:
             raise TypeError("Could not create from type: %s %s"%(data,type(data)))
         
@@ -241,7 +261,7 @@ class Image:
         '''
         @return: the image data in an OpenCV format
         '''
-        if self.opencv == None:
+        if self.opencv is None:
             self._generateOpenCV()
         return self.opencv
         
@@ -618,7 +638,7 @@ class Image:
                 pil = pil.convert('L')
             buffer = pil.tostring()
         elif self.type == TYPE_MATRIX_2D:
-            buffer = self.matrix2d.transpose().tostring()
+            buffer = self.matrix2d.x().tostring()
         elif self.type == TYPE_MATRIX_RGB:
             mat = self.matrix3d
             mat = LUMA[0]*mat[0] + LUMA[1]*mat[1] + LUMA[2]*mat[2]
@@ -628,7 +648,10 @@ class Image:
                 buffer = self.opencv.tostring()
             elif self.channels == 3:
                 w,h = self.width,self.height
-                gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
+                #TODO:check img type
+                gray = cv2.cvtColor(self.opencv,cv2.COLOR_BGR2GRAY)
+                # cv2.imshow("gray", gray)
+                # cv2.waitKey()
                 buffer = gray.tostring()
             else:
                 raise TypeError("Operation not supported for image type.")
@@ -637,6 +660,7 @@ class Image:
         
         assert buffer
             
+        print self.depth
         if depth == self.depth:
             return buffer
         
@@ -749,8 +773,13 @@ class Image:
                 return im
         
         cvim = self.asOpenCV()
+
+        print "cvim nchannels:",cvim.shape
                 
-        subim = cv.GetSubRect(cvim,(x,y,w,h))
+        subim = cvim[ y:y+h, x:x+w ]
+        cv2.imshow("subim", subim)
+        cv2.waitKey()
+        # subim = cv.GetSubRect(cvim,(x,y,w,h))
         
         affine = pv.AffineTranslate(-x,-y,(w,h))
         
@@ -761,18 +790,22 @@ class Image:
         #    else:
         #        return pv.Image(subim)
         
-        new_image = cv.CreateImage(size,cvim.depth,cvim.nChannels)
+        # new_image = cv.CreateImage(size,cvim.depth,cvim.nChannels)
         
         if interpolation == None:
             
             if size[0] < w or size[1] < y:
                 # Downsampling so use area interpolation
-                interpolation = cv.CV_INTER_AREA
+                interpolation = cv2.INTER_AREA
             else:
                 # Upsampling so use linear
-                interpolation = cv.CV_INTER_CUBIC
+                interpolation = cv2.INTER_CUBIC
 
-        cv.Resize(subim,new_image,interpolation)
+        # cv.Resize(subim,new_image,interpolation)
+        new_image=cv2.resize(subim,size,interpolation=interpolation)
+
+        cv2.imshow("new_image", new_image)
+        cv2.waitKey()
         
         affine = pv.AffineNonUniformScale(float(size[0])/w,float(size[1])/h,size)*affine
         

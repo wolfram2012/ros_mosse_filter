@@ -1,8 +1,45 @@
 import numpy as np
 import cv2
-# from pyvision.types import Image
+# from pyvision.types.img import Image
+import pyvision as pv
+import ocof.filters.common as common
+import ocof
 
 cap = cv2.VideoCapture(0)
+
+global src
+global flagDraw 
+flagDraw = False
+
+def onMouseEvent(event,x,y,flags,param):  
+    global startPointx   
+    global startPointy   
+    global flagDraw    
+    global src
+    # print event
+    if(event==1):  
+        print "Position is: %d,%d" ,x,y   
+        startPointx = x  
+        startPointy = y  
+        flagDraw = True  
+    if(event==0):  
+        if(flagDraw==True):  
+            # image = cv.CloneImage(src) 
+            image = src.copy()
+            cv2.rectangle(image, (startPointx,startPointy), (x,y), (255,0,0),3)  
+            cv2.imshow("capture", image)  
+             
+            print "EndPosition is: %d,%d" ,x,y    
+    if(event==4):  
+        if(flagDraw==True):  
+            # image = cv.CloneImage(src)
+            image = src.copy()
+            cv2.rectangle(image, (startPointx,startPointy), (x,y), (255,0,0),3)  
+            cv2.imshow("capture", image) 
+            flagDraw = False
+            global TAZ_RECT
+            TAZ_RECT = pv.Rect(startPointx,startPointy,x-startPointx,y-startPointy)
+
 
 if __name__ == '__main__':
 	# while(1):
@@ -14,6 +51,7 @@ if __name__ == '__main__':
 	#         break
 	# cap.release()
 	# cv2.destroyAllWindows() 
+	global src
 
 	ret, frame = cap.read()
 	    # show a frame
@@ -21,6 +59,8 @@ if __name__ == '__main__':
 	print frame.shape
 	print frame.dtype
 	print isinstance(frame,np.ndarray)
+
+	src = frame.copy()
 
 	GrayImg = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
 	print "grayImg message:"
@@ -35,8 +75,19 @@ if __name__ == '__main__':
 	print isinstance(bufferimg,np.ndarray)
 	print isinstance(bufferimg,str)
 
-
-	cv2.imshow("capture", GrayImg)
+	cv2.imshow("capture", frame)
+	cv2.setMouseCallback("capture", onMouseEvent)
 	cv2.waitKey()
 	cap.release()
 	cv2.destroyAllWindows()
+	# TAZ_RECT = pv.Rect(200,60,120,120)
+	# print TAZ_RECT
+	
+	Frame = pv.Image(frame)
+	tracker = ocof.MOSSETrack(Frame,TAZ_RECT)
+
+	tracker.update(Frame)
+
+
+
+	

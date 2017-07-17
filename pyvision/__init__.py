@@ -146,9 +146,10 @@ def disableCommercialUseWarnings():
 #================================== Imports =====================================
 
 
-from pyvision.types.img import Image,OpenCVToNumpy,NumpyToOpenCV
+from pyvision.types.img import Image
+# ,OpenCVToNumpy,NumpyToOpenCV
 
-from pyvision.types.Video import Video, Webcam, VideoFromImages, VideoFromFileList, VideoFromImageStack, FFMPEGVideo
+# from pyvision.types.Video import Video, Webcam, VideoFromImages, VideoFromFileList, VideoFromImageStack, FFMPEGVideo
 
 from pyvision.types.Point import Point,readPointsFile
 
@@ -156,63 +157,63 @@ from pyvision.types.Rect import Rect,BoundingRect,CenteredRect
 
 from pyvision.types.Affine import  AffineNormalizePoints, AffineTranslate, AffineScale, AffineNonUniformScale, AffineRotate, AffineFromRect, AffineFromTile, AffineFromPoints, AffineFromPointsLS, AffineFromPointsRANSAC, AffineFromPointsLMeDs, AffinePerturb, AffineTransform
 
-from pyvision.types.Perspective import  PerspectiveTransform, PerspectiveFromPoints
+# from pyvision.types.Perspective import  PerspectiveTransform, PerspectiveFromPoints
 
-from pyvision.analysis.ImageLog import ImageLog
+# from pyvision.analysis.ImageLog import ImageLog
 
-from pyvision.analysis.Montage import ImageMontage, VideoMontage
+# from pyvision.analysis.Montage import ImageMontage, VideoMontage
 
-from pyvision.analysis.plot import Plot
+# from pyvision.analysis.plot import Plot
 
-from pyvision.analysis.Table import Table
+# from pyvision.analysis.Table import Table
 
-from pyvision.analysis.Timer import Timer
+# from pyvision.analysis.Timer import Timer
 
-from pyvision.analysis.roc import ROC,ROC_LOG_SAMPLED,ROC_MATCH_SAMPLED
+# from pyvision.analysis.roc import ROC,ROC_LOG_SAMPLED,ROC_MATCH_SAMPLED
 
-from pyvision.types.ImageBuffer import ImageBuffer
+# from pyvision.types.ImageBuffer import ImageBuffer
 
-from pyvision.surveillance.BackgroundSubtraction import AbstractBGModel, FrameDifferencer, MedianFilter, ApproximateMedianFilter, MotionCompensatedFrameDifferencer, BG_SUBTRACT_FD, BG_SUBTRACT_MCFD, BG_SUBTRACT_MF, BG_SUBTRACT_AMF
+# from pyvision.surveillance.BackgroundSubtraction import AbstractBGModel, FrameDifferencer, MedianFilter, ApproximateMedianFilter, MotionCompensatedFrameDifferencer, BG_SUBTRACT_FD, BG_SUBTRACT_MCFD, BG_SUBTRACT_MF, BG_SUBTRACT_AMF
 
-from pyvision.surveillance.MotionDetector import MotionDetector,BOUNDING_RECTS,STANDARDIZED_RECTS
+# from pyvision.surveillance.MotionDetector import MotionDetector,BOUNDING_RECTS,STANDARDIZED_RECTS
 
-from pyvision.surveillance.optical_flow import OpticalFlow
+# from pyvision.surveillance.optical_flow import OpticalFlow
 
 from pyvision.other.normalize import clipRange, meanStd, meanUnit, unit, selfQuotientImage, lowPassFilter, highPassFilter, bandPassFilter, gaussianFilter
 
-from pyvision.other.distance import boolToUbyte, ubyteToBool, hamming
+# from pyvision.other.distance import boolToUbyte, ubyteToBool, hamming
 
-from pyvision.ml.knn import RobustPNorm,PNorm,correlation,chisquared,KNearestNeighbors,FLANNTree,FLANN_IMPORTED
+# from pyvision.ml.knn import RobustPNorm,PNorm,correlation,chisquared,KNearestNeighbors,FLANNTree,FLANN_IMPORTED
 
-from pyvision.util.fast_util import LocalMaximumDetector
+# from pyvision.util.fast_util import LocalMaximumDetector
 
 from pyvision.util.windows import cosineWindow, hammingWindow, hannWindow
 
-from pyvision.analysis.stats import pbinom, qbinom, cibinom, mcnemar_test, SummaryStats, cor, cov, cov2cor
+# from pyvision.analysis.stats import pbinom, qbinom, cibinom, mcnemar_test, SummaryStats, cor, cov, cov2cor
 
-from pyvision.point.GaborJets import GaborFilters, GaborImage, GaborJet, FilterBank, GaborWavelet
+# from pyvision.point.GaborJets import GaborFilters, GaborImage, GaborJet, FilterBank, GaborWavelet
 
-from pyvision.other.color import Histogram, hsBackProjectHist, rgbBackProjectHist, RGBHist, HSHist, HIST_HS, HIST_RGB
+# from pyvision.other.color import Histogram, hsBackProjectHist, rgbBackProjectHist, RGBHist, HSHist, HIST_HS, HIST_RGB
 
-from pyvision.ml.pca import prcomp, pca
+# from pyvision.ml.pca import prcomp, pca
 
-from pyvision.ml.lda import lda
+# from pyvision.ml.lda import lda
 
-from pyvision.other.surf import surf
+# from pyvision.other.surf import surf
 
-from pyvision.other.texture import lbp,LBP_CLASSIC,LBP_RAD1,LBP_RAD2,LBP_RAD3,LBP_RAD4,LBP_RAD8
+# from pyvision.other.texture import lbp,LBP_CLASSIC,LBP_RAD1,LBP_RAD2,LBP_RAD3,LBP_RAD4,LBP_RAD8
 
-from pyvision.analysis.bee import parseSigSet,saveSigset,BEE_CODE_MAP,BEE_DONTCARE,BEE_MATCH,BEE_NONMATCH,BEEDistanceMatrix
+# from pyvision.analysis.bee import parseSigSet,saveSigset,BEE_CODE_MAP,BEE_DONTCARE,BEE_MATCH,BEE_NONMATCH,BEEDistanceMatrix
 
-from pyvision.data import AIRPLANE,BABOON,FRUITS,LENA,LOGO,TAZ_IMAGE,TAZ_VIDEO,FONT_ARIAL
+# from pyvision.data import AIRPLANE,BABOON,FRUITS,LENA,LOGO,TAZ_IMAGE,TAZ_VIDEO,FONT_ARIAL
 
-from pyvision.surveillance.VideoStreamProcessor import *
+# from pyvision.surveillance.VideoStreamProcessor import *
 
-from analysis.progress_bar import ProgressBar
+# from analysis.progress_bar import ProgressBar
 
-from analysis.gui_tools import capturePointsFromMouse
+# from analysis.gui_tools import capturePointsFromMouse
 
-from pyvision.face import REDUCED_LEYE, REDUCED_REYE, REDUCED_SIZE
+# from pyvision.face import REDUCED_LEYE, REDUCED_REYE, REDUCED_SIZE
 
 
 

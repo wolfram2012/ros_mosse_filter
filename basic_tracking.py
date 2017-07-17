@@ -132,7 +132,10 @@ for frame in video:
     if tracker == None:
         tracker = ocof.MOSSETrack(frame,TAZ_RECT)
     else:
+    	start = time.time()
         tracker.update(frame)
+        stop = time.time()
+        print "period:",(stop-start)
         
     bounds = tracker.asRect()
     
