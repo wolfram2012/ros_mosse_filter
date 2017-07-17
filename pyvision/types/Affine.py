@@ -565,7 +565,7 @@ class AffineTransform:
             # matrix = pv.NumpyToOpenCV(self.matrix)
             matrix = self.matrix
             src = im.asOpenCV()
-            print "gray1 shape:", src.shape
+            # print "gray1 shape:", src.shape
             # dst = cv2.createImage( (self.size[0],self.size[1]), cv.IPL_DEPTH_8U, 1 );
             # cv.WarpPerspective( src, dst, matrix, cv.CV_INTER_LINEAR+cv.CV_WARP_FILL_OUTLIERS,cv.ScalarAll(128))                    
             dst = cv2.warpPerspective(src, matrix, (64,64))

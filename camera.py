@@ -4,6 +4,7 @@ import cv2
 import pyvision as pv
 import ocof.filters.common as common
 import ocof
+import time
 
 cap = cv2.VideoCapture(0)
 
@@ -52,6 +53,7 @@ if __name__ == '__main__':
 	# cap.release()
 	# cv2.destroyAllWindows() 
 	global src
+	tracker = None
 
 	ret, frame = cap.read()
 	    # show a frame
@@ -78,16 +80,38 @@ if __name__ == '__main__':
 	cv2.imshow("capture", frame)
 	cv2.setMouseCallback("capture", onMouseEvent)
 	cv2.waitKey()
-	cap.release()
+	# cap.release()
 	cv2.destroyAllWindows()
 	# TAZ_RECT = pv.Rect(200,60,120,120)
 	# print TAZ_RECT
 	
-	Frame = pv.Image(frame)
-	tracker = ocof.MOSSETrack(Frame,TAZ_RECT)
+	i = 0
 
-	tracker.update(Frame)
+	# Frame = pv.Image(frame)
+	# tracker = ocof.MOSSETrack(Frame,TAZ_RECT)
+	# tracker.update(Frame)
 
-
-
-	
+	print "im here!!!"
+	while(1):
+		ret, frame = cap.read()
+		# print frame.shape
+		Frame = pv.Image(frame)
+		print "Processing Frame %d..."%i
+		if tracker == None:
+			tracker = ocof.MOSSETrack(Frame,TAZ_RECT)
+			print "init"
+		else:
+			start = time.time()
+			tracker.update(Frame)
+			stop = time.time()
+			print "period:",(stop-start)
+			i += 1
+			rect = tracker.rect
+			show = (Frame.asOpenCV()).copy()
+			cv2.rectangle(show, ((int)(rect.x),(int)(rect.y)), ((int)(rect.x+rect.w),(int)(rect.y+rect.h)), (255,0,0),2)
+			cv2.imshow("show", show)
+			if cv2.waitKey(1) & 0xFF == ord('q'):
+				break
+	cap.release()
+	cv2.destroyAllWindows()
+    	

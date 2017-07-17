@@ -162,11 +162,11 @@ class CorrelationFilter:
         if self.norm_log:
             mat = np.log(mat + 1)
             
-        print "tile is:",mat
+        # print "tile is:",mat
         # Transform pixel values to have a mean of zero and unit length
         if self.norm_meanunit:
             mat = pv.meanUnit(mat)
-        print "mat is:",mat
+        # print "mat is:",mat
 
             
         # Window the input tile to reduce fourier edge effects.

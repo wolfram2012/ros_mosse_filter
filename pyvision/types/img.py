@@ -158,7 +158,7 @@ class Image:
             assert data.dtype == numpy.uint8
             self.depth = 8 
 
-            print "shape is:", self.opencv.shape
+            # print "shape is:", self.opencv.shape
 
         elif isinstance(data,numpy.ndarray) and len(data.shape) == 3 and data.shape[0]==3:
             self.type=TYPE_MATRIX_RGB
@@ -181,7 +181,7 @@ class Image:
 
             assert data.dtype == numpy.uint8
             self.depth = 8 
-            print "shape is:", self.opencv.shape
+            # print "shape is:", self.opencv.shape
             
         elif isinstance(data,PIL.Image.Image) or type(data) == str:
             if type(data) == str:
@@ -777,8 +777,8 @@ class Image:
         print "cvim nchannels:",cvim.shape
                 
         subim = cvim[ y:y+h, x:x+w ]
-        cv2.imshow("subim", subim)
-        cv2.waitKey()
+        # cv2.imshow("subim", subim)
+        # cv2.waitKey()
         # subim = cv.GetSubRect(cvim,(x,y,w,h))
         
         affine = pv.AffineTranslate(-x,-y,(w,h))
@@ -804,8 +804,8 @@ class Image:
         # cv.Resize(subim,new_image,interpolation)
         new_image=cv2.resize(subim,size,interpolation=interpolation)
 
-        cv2.imshow("new_image", new_image)
-        cv2.waitKey()
+        # cv2.imshow("new_image", new_image)
+        # cv2.waitKey()
         
         affine = pv.AffineNonUniformScale(float(size[0])/w,float(size[1])/h,size)*affine
         
